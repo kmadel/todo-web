@@ -1,5 +1,5 @@
 node('docker') {
-	docker.image('maven:3.3.3-jdk-8').inside {
+	withDockerContainer('maven:3.3.3-jdk-8').inside {
 	stage 'build'
 		checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/apemberton/todo-web.git']]])
 		sh 'mvn clean package'
