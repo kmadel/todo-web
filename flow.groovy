@@ -1,5 +1,6 @@
 node('docker&&1234') {
 	stage 'build'
+	docker.withRegistry('https://registry.hub.docker.com'){
 	def maven3 = docker.image('maven:3.3.3-jdk-8')
 	maven3.pull()
 	docker.withServer('tcp://127.0.0.1:1234') {
@@ -11,6 +12,7 @@ node('docker&&1234') {
 		stage 'integration-test' 
 			sh 'mvn verify'
 		}
+	}
 	}
 }
 
