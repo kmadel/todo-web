@@ -1,12 +1,14 @@
 node('docker') {
-	withDockerContainer('maven:3.3.3-jdk-8') {
 	stage 'build'
-		checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/apemberton/todo-web.git']]])
-		sh 'mvn clean package'
-		archive 'target/*.war'
+	docker.withServer('tcp://127.0.0.1:1234') {
+		withDockerContainer('maven:3.3.3-jdk-8') {
+			checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/apemberton/todo-web.git']]])
+			sh 'mvn clean package'
+			archive 'target/*.war'
 
-	stage 'integration-test' 
-		sh 'mvn verify'
+		stage 'integration-test' 
+			sh 'mvn verify'
+		}
 	}
 }
 
