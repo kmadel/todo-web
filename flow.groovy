@@ -10,6 +10,7 @@ node('docker') {
 
 		stage 'integration-test' 
 			sh 'mvn verify'
+			step([$class: 'JUnitResultArchiver', testResults: '**/target/surefire-reports/TEST-*.xml'])
 		}
 	}
 }
